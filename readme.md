@@ -176,12 +176,12 @@ In order to display the found artists' information, create `artist-search-result
 <br><br>
 ![](https://s3-eu-west-1.amazonaws.com/ih-materials/uploads/upload_9dc721e76158df1836ef07565b5385c2.png)
 
-## Iteration 4 | View Albums
+## Iteration 4 | View albums
 
 On the `artist-search-results.hbs` page we created the `View albums` button/link. Users should be taken to _some other page_ after clicking on it and there be able to see all the albums of that particular artist. **Hint**: the URL should include artist's `id` 🤓 and should change dynamically.
 
 ```html
-<a href="/albums/someArtistIdGoesHere">View Albums</a>
+<a href="/albums/someArtistIdGoesHere">View albums</a>
 ```
 
 So let's create a new page - `albums.hbs` where all the results will be displayed. Make sure you show the _name_ and the _cover_ of each album and add a button/link to see the tracks (next iteration).

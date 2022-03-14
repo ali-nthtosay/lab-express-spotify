@@ -3,7 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const hbs = require('hbs');
 
+
 // require spotify-web-api-node package here:
+const SpotifyWebApi = require('spotify-web-api-node');
 
 const app = express();
 
@@ -11,8 +13,43 @@ app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
 
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // setting the spotify-api goes here:
+const spotifyApi = new SpotifyWebApi({
+    clientId: process.env.dc672a18ad024ec9bfbae4888bc9f9b6,
+    clientSecret: process.env.e829459c43d840fca129f996253cae61
+});
+
+// Retrieve an access token ////////////// hab meine nicht gefunden
+spotifyApi
+    .clientCredentialsGrant()
+    .then(data => spotifyApi.setAccessToken(data.body['access_token']))
+    .catch(error => console.log('Something went wrong when retrieving an access token', error));
 
 // Our routes go here:
+app.get("/", async (req, res) => {
+    res.render("index");
+});
+
+app.get("/artist-search", async (req, res) => {
+    const result = await spotifyApi.searchArtists(req.query.search);
+    const items = result?.body?.artists?.items ?? [];
+    res.render("results", { items });
+  });
+  
+  app.get("/albums/:artistId", async (req, res) => {
+    const resultId = await spotifyApi.getArtistAlbums(req.params.artistId);
+    const album = resultId?.body?.items ?? [];    ///// ???? 
+    res.render("albums", { album });
+  });
+  
+  app.get("/tracks/:albumId", async (req, res) => {
+    const resultId = await spotifyApi.getAlbumTracks(req.params.albumId);
+    const tracks = resultId?.body?.items ?? [];   //// ???? das gleiche wie oben
+    res.render("tracks", { tracks });
+  });
 
 app.listen(3000, () => console.log('My Spotify project running on port 3000 🎧 🥁 🎸 🔊'));
